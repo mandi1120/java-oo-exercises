@@ -4,8 +4,8 @@ public class Student  {
 	
 	public String first_name;
 	public String last_name;
-	public Integer StudentID;
-	public Integer Credits;
+	public int StudentID;
+	public int Credits;
 	public double GPA;
 
 	public Student (String first_name, String last_name, Integer StudentID) {
@@ -15,21 +15,23 @@ public class Student  {
 		this.Credits = 0;
 		this.GPA = 0;
 	}
-//	public Student baby (String first_name, String last_name, Integer StudentID) {
-//		this.last_name = last_name;
-//		this.first_name = first_name;
-//		this.StudentID = StudentID;
-//		return baby;
-//	}
+	public Student (Student student1, Student student2) {
+		this.first_name = student1.getName();
+		this.last_name = student2.getName();
+		this.StudentID = student1.getStudentID() + student2.getStudentID();
+		this.GPA = (student1.getGPA() + student2.getGPA()) / 2;
+		this.Credits = Math.max(student1.getCredits(), student2.getCredits());
+		return ;
+	}
 	
 	public String getName() {
 		return this.first_name + " " + this.last_name;
 	}
 	
-	public Integer getStudentID() {
+	public int getStudentID() {
 		return this.StudentID;
 	}
-	public Integer getCredits() {
+	public int getCredits() {
 		return this.Credits;
 	}
 	public double getGPA(){
@@ -49,27 +51,38 @@ public class Student  {
 		return "no class standing";
 	}
 	
-	public void submitGrade(double courseGrade, Integer courseCredits) {
+	public void submitGrade(double courseGrade, int courseCredits) {
 ///Take the number of credits for a course and multiply it by the grade for that course. 
 ///This is called the quality score. GPA is computed as the sum of all of the quality 
 ///scores for each course the student has taken, divided by the total number of credits.
 ///You should also round the GPA so that it only contains three digits after the decimal.
 		double qualityScore = courseGrade * courseCredits;
-				
-		qualityScore += qualityScore;
-		Credits += Credits;
-		double GPA = (qualityScore / this.Credits) * 1000 / 1000;
-		this.GPA = GPA;
+		double oldqualityScore = this.GPA * this.Credits;
+		this.Credits = this.Credits + courseCredits;
+		this.GPA = (qualityScore + oldqualityScore) / this.Credits;
+		this.GPA = (double) (Math.round(this.GPA * 1000)) / 1000;
 		
+	
 	}
 	
-	public Integer computeTuition() {
+	public double computeTuition() {
 //returns the total amount of tuition the student has paid. 
 //The average cost of tuition for 1 semester in the United States is 
 //roughly $20,000. Assume that there are 15 credit hours per semester, 
 //and that any "leftover" credits are computed at the proportional rate.
-		int tuition = (20000 * (this.Credits / 15));
-		return tuition;
+        double tuition = 0;
+        if (this.Credits ==15){
+        	tuition = 20000;}
+        else if (this.Credits > 15){
+        	tuition = 20000 + (1333.33 * (this.Credits -15));}
+        else {
+        	tuition = this.Credits * 1333.33;}
+
+//        else if (this.Credits % 15 == 0) {
+//        	tuition = 20000 * (this.Credits /15);}
+//        else if (this.Credits % 15 > 0) {			
+//        	tuition = (1333.33 * this.Credits);}
+		return (tuition);
 	}
 	
 	public Student createLegacy(Student student1, Student student2) {
@@ -81,20 +94,13 @@ public class Student  {
 //The legacy's estimated GPA will be the average of its parents GPA.
 //The legacy's estimated number of credits will be the maximum of its parents credits
 //Hint: it may be useful to create an additional constructor!
-
-		this.first_name = student1.getName();
-		this.last_name =  student2.getName();
-		this.StudentID = student1.getStudentID() + student2.getStudentID();
-		this.GPA = student1.getGPA() + student2.getGPA() / 2;
-		this.Credits = (student1.getCredits() + student2.getCredits());
-		return createLegacy(student1, student2);
+		Student legacy = new Student(student1, student2);
+		return legacy;
 	}
 	
 //- returns the students full name and student ID
 	public String toString(){
-		Student baby = new Student(this.first_name, this.last_name, this.StudentID);
-///		name = this.first_name + " " + this.last_name
-		String name = (baby.first_name + " " + baby.last_name + " " + baby.StudentID);
+		String name = (first_name + " " + last_name + " " + StudentID);
 		return name;
 	}
 
